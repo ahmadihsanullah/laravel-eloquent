@@ -13,8 +13,8 @@ class VirtualAccount extends Model
     protected $table = 'virtual_accounts';
     protected $primaryKey = 'id';
     protected $keyType = 'int';
-    protected $incrementing = true;
-    protected $timestamps = false;
+    public $incrementing = true;
+    public $timestamps = false;
 
 
     public function wallet(): BelongsTo
