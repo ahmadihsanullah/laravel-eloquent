@@ -5,11 +5,16 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Customer;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\CategorySeeder;
+use Database\Seeders\CustomerSeeder;
+use Database\Seeders\ReviewSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 
+use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertNotNull;
 
 class CategoryTest extends TestCase
@@ -57,5 +62,20 @@ class CategoryTest extends TestCase
 
         $outOfBoundStock = $category->products()->where('stock', '<=', 0)->get();
         self::assertCount(1, $outOfBoundStock);
+    }
+
+    public function testHasManyThrough()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class, CustomerSeeder::class, ReviewSeeder::class]);
+        
+        $category = Category::find('FOOD');
+        $this->assertNotNull($category);
+        
+        $reviews = $category->reviews;
+        Log::info($reviews);
+        $this->assertNotNull($reviews);
+        $this->assertCount(2, $reviews);
+        
+        Log::info("has many through success");
     }
 }
