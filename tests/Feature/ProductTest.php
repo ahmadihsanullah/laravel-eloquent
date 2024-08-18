@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Models\Product;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\CategorySeeder;
+use Database\Seeders\ImageSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -38,5 +39,18 @@ class ProductTest extends TestCase
 
         $mostExpensiveProduct = $category->mostExpensiveProduct;
         assertEquals('2', $mostExpensiveProduct->id);
+    }
+
+    public function testOnetoOneMorph()
+    {
+        $this->Seed([CategorySeeder::class, ProductSeeder::class, ImageSeeder::class]);
+
+        $product = Product::find("1");
+        self::assertNotNull($product);
+
+        $image = $product->image;
+        self::assertNotNull($image);
+
+        self::assertEquals("https://programmerzamannow.com/image/2.jpg", $image->url);
     }
 }
